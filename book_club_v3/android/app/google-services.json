@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "73631180072",
+    "firebase_url": "https://book-club-e9ef5-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "book-club-e9ef5",
+    "storage_bucket": "book-club-e9ef5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73631180072:android:531fcb2f9328bdb9c7dc1d",
+        "android_client_info": {
+          "package_name": "com.fakeshapes.bookclub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73631180072-rfqf8qi77u47t8rdhb9tht3ji6oo2uff.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMJLXoNxnOKD0kkFGMqL-LfpxvhCZccWo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73631180072-rfqf8qi77u47t8rdhb9tht3ji6oo2uff.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

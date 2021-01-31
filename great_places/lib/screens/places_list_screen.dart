@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../providers/great_places.dart';
 import './add_place_screen.dart';
-import './places_list_screen.dart';
 
 class PlacesListScreen extends StatelessWidget {
   @override
