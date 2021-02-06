@@ -1,6 +1,6 @@
-import '../widgets/star_display_widget.dart';
+import 'package:book_club_v3/models/current_book_model.dart';
+import 'package:book_club_v3/providers/book.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 import '../widgets/current_book.dart';
@@ -10,124 +10,135 @@ import '../widgets/chat/chat_widget.dart';
 import 'booklist_screen.dart';
 import '../providers/book_archive.dart';
 import '../providers/club_members.dart';
+import '../models/user_model.dart';
 
-class ClubScreen extends StatelessWidget {
+class ClubScreen extends StatefulWidget {
+  final clubName;
+  final clubId;
+  final adminId;
+  // 'members': members,
+  final imageUrl;
+  // 'bookList': bookList,
+  // final currentUser;
+
+  ClubScreen({
+    this.adminId,
+    this.clubId,
+    this.clubName,
+    // this.currentUser,
+    this.imageUrl,
+  });
+
   static const routeName = '/club-screen';
 
-  var membersList;
-  var bookData;
-  var bookList;
+  @override
+  _ClubScreenState createState() => _ClubScreenState();
+}
+
+class _ClubScreenState extends State<ClubScreen> {
   var _isInit = true;
   var _isLoading = true;
+  // @override
+  // void initState() {
+  //   // Future.delayed(Duration.zero).then((_) {
+  //   //   Provider.of<BookArchive>(context).getCurrentBookId(widget.clubId);
+  //   // });
+  //   super.initState();
+  // }
+
   var currentBookId;
+  var currentBookTitle;
 
-  Future<List> getMembersList(context, clubName) async {
-    return membersList = Provider.of<ClubMembers>(context).memberList;
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      // _getCurrentBookInfo(context);
+
+      // await Provider.of<BookArchive>(context).getCurrentBookId(widget.clubId);
+
+      //     .then((_) {
+      //   setState(() {
+      //     currentBookId = Provider.of<BookArchive>(context).currentBookID;
+      //     currentBookTitle = Provider.of<BookArchive>(context).currentBookTitle;
+      //     _isLoading = false;
+      //   });
+      // });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
-  Future<List> getBookList(context, clubName) async {
-    bookList = Provider.of<BookArchive>(context).bookList;
-    bookList.forEach(
-      (item) {
-        if (item.isCurrentBook == true) {
-          currentBookId = item.id;
-        }
-      },
-    );
-    // for (var item in bookList)
-
-    return bookList;
-    // List bookList = bookData.bookList;
+  Future<Map> _getCurrentBookInfo(BuildContext context) async {
+    return await Provider.of<BookArchive>(context)
+        .getCurrentBookId(widget.clubId);
   }
+
+  // onGenerateRoute:
 
   @override
   Widget build(BuildContext context) {
-    final clubName =
-        ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+    // var _clubName =
+    //     ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
 
-    if (_isInit) {
-      Provider.of<BookArchive>(context).fetchAndSetBooks(clubName['clubId']);
-      Provider.of<ClubMembers>(context).getAllClubMembers(clubName['clubId']);
-      _isInit = !_isInit;
-    }
+    // Future<List> getCurrentBookInfo() async {
+    //   return [currentBookId, currentBookTitle];
+    // }
 
-    updateBookRating(rating) {
-      Provider.of<BookArchive>(context, listen: false)
-          .updateBookRating(clubName['clubId'], bookList, rating);
-    }
+    // final userModel = Provider.of<UserModel>(context);
+    // final userName = userModel.userName;
+    // _clubName =
+    //     ModalRoute.of(context).settings.arguments as Map<String, dynamic>;
+
+    // if (_isInit) {
+    //   Provider.of<BookArchive>(context)
+    //       .getCurrentBookId(context, _clubName['clubId']);
+    //   currentBookId = Provider.of<BookArchive>(context).currentBookID;
+    //   _isInit = !_isInit;
+    // }
 
     updateUserProgress(progress) {
-      Provider.of<ClubMembers>(context, listen: false).updateUserProgress(
-          clubName['currentUser'], clubName['clubId'], bookList, progress);
+      Provider.of<ClubMembers>(context, listen: false)
+          .updateUserProgress(widget.clubId, progress);
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          clubName['clubName'],
-          style: TextStyle(
-              fontSize: 18,
-              letterSpacing: 1.2,
-              color: Theme.of(context).textTheme.headline6.color),
-        ),
-      ),
-      body: FutureBuilder(
-        future: Future.wait([
-          getMembersList(context, clubName['clubId']),
-          getBookList(context, clubName['clubId'])
-        ]),
-        builder: (context, AsyncSnapshot<List> snapshot) {
-          if (!snapshot.hasData) {
-            return CircularProgressIndicator();
-          }
-          return Container(
-            child: Column(
-              children: [
-                CurrentBook(clubName['clubId'], bookList),
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
+    // Future<String> _currentBookId = Future<String>.delayed(
+    //     Duration.zero, () => CurrentBookModel().currentBookId);
+
+    return FutureBuilder(
+        future: _getCurrentBookInfo(context),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: (Text('Loading...')),
+            );
+          } else {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  widget.clubName,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+              ),
+              body: Container(
+                child: Column(
+                  children: [
+                    CurrentBook(clubId: widget.clubId),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 10,
                     ),
-                  ),
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          'Book List',
-                          textAlign: TextAlign.right,
-                        ),
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(BookListScreen.routeName, arguments: {
-                            'clubId': clubName['clubId'],
-                            'bookList': bookList,
-                          });
-                        },
-                      ),
-                      RateBookWidget(updateBookRating),
-                      // StarDisplayWidget(),
-                    ],
-                  ),
+                    MembersListWidget(updateUserProgress, widget.clubId,
+                        snapshot.data['currentBookID']),
+                    ChatWidget(widget.clubId, snapshot.data['currentBookID'],
+                        snapshot.data['currentBookTitle']),
+                  ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 10,
-                ),
-                MembersListWidget(membersList, updateUserProgress,
-                    clubName['clubId'], currentBookId),
-                ChatWidget(),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+              ),
+            );
+          }
+        });
   }
 }

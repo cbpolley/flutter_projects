@@ -22,37 +22,37 @@ class _BookListScreenState extends State<BookListScreen> {
     super.initState();
   }
 
-  void getClubId(clubIdIn) {
-    clubId = clubIdIn;
+  // void getClubId(clubIdIn) {
+  //   clubId = clubIdIn;
 
-    Provider.of<BookArchive>(context).fetchAndSetBooks(clubId).then((_) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-  }
+  //   Provider.of<BookArchive>(context).fetchAndSetBooks(clubId).then((_) {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   });
+  // }
 
-  @override
-  void didChangeDependencies() {
-    if (_isInit) {
-      setState(() {
-        _isLoading = true;
-      });
+  // @override
+  // void didChangeDependencies() {
+  //   if (_isInit) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
 
-      Provider.of<BookArchive>(context).fetchAndSetBooks(clubId).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-    }
-    _isInit = false;
-    super.didChangeDependencies();
-  }
+  //     Provider.of<BookArchive>(context).fetchAndSetBooks(clubId).then((_) {
+  //       setState(() {
+  //         _isLoading = false;
+  //       });
+  //     });
+  //   }
+  //   _isInit = false;
+  //   super.didChangeDependencies();
+  // }
 
   Widget build(BuildContext context) {
     Map<String, dynamic> clubArguments =
         ModalRoute.of(context).settings.arguments;
-    getClubId(clubArguments['clubId']);
+    // getClubId(clubArguments['clubId']);
 
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +63,7 @@ class _BookListScreenState extends State<BookListScreen> {
             tooltip: 'Add a book',
             onPressed: () {
               Navigator.of(context)
-                  .pushNamed(AddBookScreen.routeName, arguments: clubId);
+                  .pushNamed(AddBookScreen.routeName, arguments: clubArguments);
             },
           )
         ],

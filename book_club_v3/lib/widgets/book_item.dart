@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -64,11 +65,12 @@ class BookItem extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: Container(
-                      child: (imageUrl == 'assets/images/bookClub_bc.svg')
-                          ? SvgPicture.asset('assets/images/bookClub_bc.svg')
-                          : Image(
-                              image: NetworkImage(imageUrl),
-                            )
+                      child:
+                          // imageUrl == 'assets/images/bookClub_bc.svg'
+                          SvgPicture.asset('assets/images/bookClub_bc.svg')
+                      // : Image(
+                      //     image: NetworkImage(imageUrl),
+                      //   )
                       // decoration: new BoxDecoration(
                       //   image: new DecorationImage(
                       //     image: NetworkImage(imageUrl),
@@ -151,14 +153,45 @@ class BookItem extends StatelessWidget {
                   flex: 1,
                   child: Container(
                     width: 50,
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: (bookRating == null)
-                          ? Text('N/A')
-                          : Text(
-                              bookRating.toString(),
-                            ),
-                    ),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('clubs')
+                            .doc(clubId)
+                            .collection('bookList')
+                            .doc(id)
+                            .collection('bookRating')
+                            .snapshots(),
+                        builder: (context, ratingSnapshot) {
+                          var sumRating = 0.00;
+
+                          getSumRating() {
+                            if (ratingSnapshot.connectionState !=
+                                ConnectionState.waiting) {
+                              List ratings = ratingSnapshot.data.docs.toList();
+                              ratings.forEach((item) => {
+                                    sumRating = sumRating +
+                                        double.parse(item
+                                            .get(FieldPath(['bookRating']))
+                                            .toString())
+                                  });
+                              sumRating = sumRating / ratings.length;
+                              if (sumRating.isNaN) {
+                                sumRating = 0.00;
+                              }
+                            }
+
+                            return sumRating;
+                          }
+
+                          return Align(
+                            alignment: Alignment.center,
+                            child: (sumRating == null)
+                                ? Text('N/A')
+                                : Text(
+                                    getSumRating().toString(),
+                                  ),
+                          );
+                        }),
                   ),
                 ),
               ],

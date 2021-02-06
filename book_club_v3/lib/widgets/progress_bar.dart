@@ -26,19 +26,33 @@ class ProgressBar extends StatelessWidget {
                     radiusFactor: 1.2,
                     showLabels: false,
                     showTicks: false,
+                    useRangeColorForAxis: true,
+                    showAxisLine: false,
+
+                    // axisLineStyle: AxisLineStyle(
+                    //   thickness: 0.15,
+                    //   color: Colors.blueGrey,
+                    //   thicknessUnit: GaugeSizeUnit.factor,
+                    // ),
+
                     ranges: <GaugeRange>[
                       GaugeRange(
-                        startValue: 0,
-                        endValue: 100,
-                        color: Colors.grey,
-                      )
+                          startValue: 0,
+                          endValue: 100,
+                          color: Theme.of(context).cardColor)
                     ],
                     pointers: <RangePointer>[
-                      (isAdmin == true)
-                          ? RangePointer(
-                              value: bookPercentage, color: Colors.blue)
-                          : RangePointer(
-                              value: bookPercentage, color: Colors.green)
+                      RangePointer(
+                        value: bookPercentage,
+                        gradient: const SweepGradient(colors: <Color>[
+                          Color(0xFF783CB8),
+                          Color(0xFFFF3D27),
+                        ], stops: <double>[
+                          0.25,
+                          0.75
+                        ]),
+                        enableAnimation: true,
+                      ),
                     ],
                   ),
                 ],

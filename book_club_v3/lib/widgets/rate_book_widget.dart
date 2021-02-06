@@ -12,7 +12,7 @@ class RateBookWidget extends StatefulWidget {
 }
 
 class _RateBookWidgetState extends State<RateBookWidget> {
-  double _currentSliderValue = 20;
+  double _currentSliderValue = 0.0;
 
   var _isPressed = true;
 

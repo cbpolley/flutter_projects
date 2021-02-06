@@ -8,7 +8,7 @@ import '../screens/user_details_screen.dart';
 
 class BookClubDrawer extends StatelessWidget {
   var _isInit = true;
-  final AsyncSnapshot<User> userDetails;
+  final userDetails;
 
   BookClubDrawer(this.userDetails);
 

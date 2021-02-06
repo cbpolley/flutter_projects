@@ -1,60 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChosenBy extends StatelessWidget {
-  final String chosenBy;
+  final chosenBy;
 
   ChosenBy(this.chosenBy);
 
+  var name;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 7,
-          child: Container(
-            child: Text(
-              "$chosenBy's choice",
-              textAlign: TextAlign.left,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-            ),
-          ),
-        ),
-        // Expanded(
-        //   flex: 3,
-        //   child: SizedBox(
-        //     height: 30,
-        //     child: RaisedButton(
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.only(
-        //           bottomLeft: Radius.circular(10),
-        //           bottomRight: Radius.circular(10),
-        //         ),
-        //       ),
-        //       color: Colors.amber,
-        //       child: Text(
-        //         'Change book',
-        //         textAlign: TextAlign.center,
-        //       ),
-        //       onPressed: () {
-        //         Navigator.of(context).pushNamed(BookListScreen.routeName);
-        //       },
-        //     ),
-        //   ),
-        // ),
-        // Expanded(
-        //   flex: 3,
-        //   child: FlatButton(
-        //     color: Theme.of(context).accentColor,
-        //     child: Text(
-        //       'Change book',
-        //       textAlign: TextAlign.center,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.of(context).pushNamed(BookScreen.routeName);
-        //     },
-        //   ),
-        // )
-      ],
-    );
+    // getChosenByUserName(chosenBy) async {
+    //   var instance = FirebaseFirestore.instance;
+    //   await instance.collection('users').doc(chosenBy).get().then((item) {
+    //     returnUserName = (item.data()['userName']);
+    //     print(returnUserName);
+    //   });
+    //   if (returnUserName == null) {
+    //     returnUserName = 'Anonymous';
+    //   }
+    //   return returnUserName.toString();
+    // }
+
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(chosenBy)
+            .snapshots(),
+        builder: (context, userSnapshot) {
+          userSnapshot.connectionState == ConnectionState.waiting
+              ? name = 'Bobs'
+              : name = userSnapshot.data.get(FieldPath(['userName']));
+          return Row(
+            children: [
+              Expanded(
+                flex: 7,
+                child: Container(
+                  child: Text(
+                    "$name\'s choice",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 }

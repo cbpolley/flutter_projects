@@ -29,8 +29,8 @@ class AppTheme {
       subtitle2: TextStyle(color: Colors.white),
       headline1: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       headline2: TextStyle(color: Colors.white),
-      headline3: TextStyle(color: Colors.white),
-      headline4: TextStyle(color: Colors.white),
+      headline3: TextStyle(color: Colors.white, fontSize: 16),
+      headline4: TextStyle(color: green),
       headline5: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w600,

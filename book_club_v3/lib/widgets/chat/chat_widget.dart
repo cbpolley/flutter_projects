@@ -2,11 +2,24 @@ import 'package:book_club_v3/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChatWidget extends StatelessWidget {
+  final clubId;
+  final currentBookId;
+  final currentBookTitle;
+  // final userName;
+
+  ChatWidget(this.clubId, this.currentBookId, this.currentBookTitle);
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed(ChatScreen.routeName);
+        Navigator.of(context).pushNamed(ChatScreen.routeName, arguments: {
+          'clubMap': {
+            'id': clubId,
+            'bookId': currentBookId,
+            'bookTitle': currentBookTitle,
+            // 'userName': userName,
+          }
+        });
       },
       child: Container(
         height: 80,

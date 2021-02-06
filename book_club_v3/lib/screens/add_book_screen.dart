@@ -22,10 +22,10 @@ class AddBookScreen extends StatelessWidget {
     _bookImageController.dispose();
   }
 
-  Future<void> _addBookToArchive(context, Map bookMap, String bookId) async {
+  Future<void> _addBookToArchive(context, Map bookMap, Map clubDetails) async {
     Book convertedBook = new Book.fromJson(bookMap);
     await Provider.of<BookArchive>(context, listen: false)
-        .addBook(convertedBook, bookId);
+        .addBook(convertedBook, clubDetails);
     Navigator.pop(context);
   }
 
@@ -33,7 +33,7 @@ class AddBookScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final clubId = ModalRoute.of(context).settings.arguments as String;
+    final clubDetails = ModalRoute.of(context).settings.arguments;
     // final authData = Provider.of<Auth>(context, listen: false);
     // final clubId = ModalRoute.of(context);
     return Scaffold(
@@ -145,12 +145,13 @@ class AddBookScreen extends StatelessWidget {
                               'bookTitle': _bookTitleController.text,
                               'author': _bookAuthorController.text,
                               'bookDesc': _bookDescriptionController.text,
+                              'bookRating': 0.00,
                               'pages': int.parse(_bookPagesController.text),
                               'imageUrl': "assets/images/bookClub_bc.svg",
                               'isCurrentBook': _isCurrentBook,
                               'chosenBy': 'The current User',
                             };
-                            _addBookToArchive(context, bookMap, clubId);
+                            _addBookToArchive(context, bookMap, clubDetails);
                           },
                         ),
                       ),

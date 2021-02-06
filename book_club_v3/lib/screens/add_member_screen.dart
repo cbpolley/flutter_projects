@@ -24,8 +24,8 @@ class AddMemberScreen extends StatelessWidget {
 
   Future<void> _addMemberToClub(context, Map memberMap, String clubId) async {
     Member convertedMember = new Member.fromJson(memberMap);
-    await Provider.of<ClubMembers>(context, listen: false)
-        .addMember(context, clubId, convertedMember);
+    // await Provider.of<ClubMembers>(context, listen: false)
+    //     .addMember(context, clubId, convertedMember);
     Navigator.pop(context);
   }
 

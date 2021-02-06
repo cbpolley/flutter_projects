@@ -36,7 +36,7 @@ class _AddClubScreenState extends State<AddClubScreen> {
     super.dispose();
   }
 
-  Future<void> _addClubToClubList(Map clubMap) async {
+  Future<void> _addClubToClubList(Map clubMap) {
     final convertedClub = new Club.fromJson(clubMap);
     Provider.of<ClubListProvider>(context, listen: false)
         .addClub(convertedClub);

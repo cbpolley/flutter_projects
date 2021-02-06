@@ -16,21 +16,23 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 // import 'club.dart';
 
-class ClubItem extends StatelessWidget {
+class SearchClubItem extends StatefulWidget {
   final String id;
   final String clubName;
-  final String currentUser;
   // final members;
   final String adminId;
   // final Map bookList;
   final String imageUrl;
+  final String currentUserId;
+  final String currentUserName;
   // final userDetails;
 
-  ClubItem({
+  SearchClubItem({
     this.id,
     this.clubName,
     this.adminId,
-    this.currentUser,
+    this.currentUserId,
+    this.currentUserName,
     // this.members,
     this.imageUrl,
     // this.bookList,
@@ -38,11 +40,49 @@ class ClubItem extends StatelessWidget {
   });
 
   @override
+  _SearchClubItemState createState() => _SearchClubItemState();
+}
+
+var joinRequested = false;
+
+class _SearchClubItemState extends State<SearchClubItem> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+// @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  sendJoinRequest(instance) {
+    joinRequested = true;
+    instance
+        .collection('clubs')
+        .doc(widget.id)
+        .collection('joinRequests')
+        .doc(widget.currentUserId)
+        .set({
+      'userId': widget.currentUserId,
+      'userName': widget.currentUserName,
+      'requestedDate': DateTime.now()
+    });
+  }
+
+  // updateSearchTerm() {
+  //   setState(() {
+  //     searchTerm = _clubSearchController.text.toString().trim();
+  //   });
+  // }
+
+  @override
   Widget build(BuildContext context) {
     // final clubData = Provider.of<ClubListProvider>(context);
 
     // final authData = Provider.of<Auth>(context, listen: false);
     final instance = FirebaseFirestore.instance;
+    // final user = FirebaseAuth.instance.currentUser;
 
     return Container(
       margin: const EdgeInsets.all(10),
@@ -76,16 +116,17 @@ class ClubItem extends StatelessWidget {
                     flex: 2,
                     child: Container(
                       color: Colors.white,
-                      child: (imageUrl == 'assets/images/bookClub_bc.svg')
-                          ? SvgPicture.asset(
-                              'assets/images/bookClub_bc.svg',
-                              semanticsLabel: 'Bookclub Logo',
-                              height: 200,
-                            )
-                          : Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                            ),
+                      child:
+                          (widget.imageUrl == 'assets/images/bookClub_bc.svg')
+                              ? SvgPicture.asset(
+                                  'assets/images/bookClub_bc.svg',
+                                  semanticsLabel: 'Bookclub Logo',
+                                  height: 200,
+                                )
+                              : Image.network(
+                                  widget.imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
                     ),
                   ),
                   Expanded(
@@ -108,129 +149,67 @@ class ClubItem extends StatelessWidget {
                               alignment: Alignment.topLeft,
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
-                                child: Text(clubName,
+                                child: Text(widget.clubName,
                                     style:
                                         Theme.of(context).textTheme.headline5),
                               ),
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              if (currentUser == adminId)
-                                Expanded(
-                                  flex: 10,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            height: 40,
-                                            child: Align(
-                                              alignment: Alignment.bottomLeft,
-                                              child: Text(
-                                                'Admin',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Container(
+                                  height: 40,
+                                  child: (widget.currentUserId ==
+                                          widget.adminId)
+                                      ? Align(
+                                          alignment: Alignment.bottomLeft,
+                                          child: Text(
+                                            'Admin',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          StreamBuilder<QuerySnapshot>(
-                                              stream: instance
-                                                  .collection('clubs')
-                                                  .doc(id)
-                                                  .collection('joinRequests')
-                                                  .snapshots(),
-                                              builder: (BuildContext context,
-                                                  AsyncSnapshot<QuerySnapshot>
-                                                      snapshot) {
-                                                return Expanded(
-                                                  child: Container(
-                                                    height: 40,
-                                                    child: (snapshot.connectionState ==
-                                                                ConnectionState
-                                                                    .waiting ||
-                                                            snapshot.data.docs
-                                                                    .length ==
-                                                                0)
-                                                        ? null
-                                                        : Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceEvenly,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              Icon(Icons.people,
-                                                                  color: Colors
-                                                                      .greenAccent),
-                                                              Text(
-                                                                  snapshot
-                                                                      .data
-                                                                      .docs
-                                                                      .length
-                                                                      .toString(),
-                                                                  style: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline6
-                                                                      .copyWith(
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          fontSize:
-                                                                              16,
-                                                                          color:
-                                                                              Colors.greenAccent)),
-                                                            ],
-                                                          ),
-                                                  ),
-                                                );
-                                              }),
-                                        ]),
-                                  ),
+                                        )
+                                      : null,
                                 ),
+                              ),
                               Container(
                                 height: 40,
-                                width: 125,
+                                width: 105,
                                 child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: RaisedButton(
-                                    color: Colors.amber,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text('go to club'),
-                                        Icon(Icons.arrow_right),
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ClubScreen(
-                                              clubId: id,
-                                              clubName: clubName,
-                                              adminId: adminId,
-                                              imageUrl: imageUrl,
-                                            ),
-                                            // ClubScreen.routeName,
-                                            // arguments: {
-                                            //   'clubName': clubName,
-                                            //   'clubId': id,
-                                            //   'adminId': adminId,
-                                            //   // 'members': members,
-                                            //   'imageUrl': imageUrl,
-                                            //   // 'bookList': bookList,
-                                            //   'currentUser': authData.userId,
-                                            // },
-                                          ));
-                                    },
-                                  ),
+                                  alignment: Alignment.center,
+                                  child: joinRequested
+                                      ? RaisedButton(
+                                          color: Colors.grey,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'requested',
+                                              ),
+                                            ],
+                                          ),
+                                          onPressed: () {},
+                                        )
+                                      : RaisedButton(
+                                          color: Colors.amber,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text('Join'),
+                                              Icon(Icons.arrow_right),
+                                            ],
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              sendJoinRequest(instance);
+                                            });
+                                          },
+                                        ),
                                 ),
                               ),
                             ],
@@ -260,7 +239,7 @@ class ClubItem extends StatelessWidget {
                               StreamBuilder<QuerySnapshot>(
                                   stream: instance
                                       .collection('clubs')
-                                      .doc(id)
+                                      .doc(widget.id)
                                       .collection('members')
                                       .snapshots(),
                                   builder: (BuildContext context,
@@ -303,7 +282,7 @@ class ClubItem extends StatelessWidget {
                               StreamBuilder<QuerySnapshot>(
                                   stream: instance
                                       .collection('clubs')
-                                      .doc(id)
+                                      .doc(widget.id)
                                       .collection('bookList')
                                       .snapshots(),
                                   builder: (context, snapshot) {

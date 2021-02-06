@@ -1,3 +1,4 @@
+import 'package:book_club_v3/widgets/search_club_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,10 +12,10 @@ import './screens/add_club_screen.dart';
 import './screens/chat_screen.dart';
 import './screens/club_screen.dart';
 import './screens/club_overview_screen.dart';
-import './screens/splash_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/user_details_screen.dart';
 import './screens/add_member_screen.dart';
+import './screens/find_club_screen.dart';
 
 import './providers/book_archive.dart';
 import './providers/club_list_provider.dart';
@@ -23,7 +24,9 @@ import './providers/member.dart';
 import './providers/user_details.dart';
 import './providers/club_members.dart';
 
-import './widgets/club_list.dart';
+import './widgets/current_book.dart';
+
+import './models/current_book_model.dart';
 
 class ScreenSize {
   static Size size;
@@ -43,34 +46,29 @@ class BookClub extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
-        ChangeNotifierProxyProvider<Auth, ClubListProvider>(
-          update: (ctx, auth, existingClubs) => ClubListProvider(auth.token,
-              auth.userId, existingClubs == null ? [] : existingClubs.clubList),
-          create: null,
+        // ChangeNotifierProxyProvider<Auth, UserDetails>(
+        //   update: (ctx, auth, existingUser) => UserDetails(
+        //       auth.token,
+        //       auth.userId,
+        //       existingUser == null
+        //           ? Member(id: auth.userId)
+        //           : existingUser.userDetails),
+        //   create: null,
+        // ),
+        ChangeNotifierProvider(
+          create: (ctx) => BookArchive(),
         ),
-        ChangeNotifierProxyProvider<Auth, UserDetails>(
-          update: (ctx, auth, existingUser) => UserDetails(
-              auth.token,
-              auth.userId,
-              existingUser == null
-                  ? Member(id: auth.userId)
-                  : existingUser.userDetails),
-          create: null,
+        ChangeNotifierProvider(
+          create: (ctx) => ClubListProvider(),
         ),
-        ChangeNotifierProvider.value(
-          value: ClubList(),
+        ChangeNotifierProvider(
+          create: (ctx) => ClubMembers(),
         ),
-        ChangeNotifierProxyProvider<Auth, BookArchive>(
-          update: (ctx, auth, existingBooks) => BookArchive(auth.token,
-              auth.userId, existingBooks == null ? [] : existingBooks.bookList),
-          create: null,
+        ChangeNotifierProvider(
+          create: (ctx) => CurrentBook(),
         ),
-        ChangeNotifierProxyProvider<Auth, ClubMembers>(
-          update: (ctx, auth, existingMembers) => ClubMembers(
-              auth.token,
-              auth.userId,
-              existingMembers == null ? [] : existingMembers.memberList),
-          create: null,
+        ChangeNotifierProvider(
+          create: (ctx) => CurrentBookModel(),
         ),
       ],
       child: Consumer<Auth>(
@@ -87,21 +85,12 @@ class BookClub extends StatelessWidget {
           home: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (ctx, userSnapshot) {
-                if (userSnapshot.hasData) {
+                if (userSnapshot.hasData &&
+                    userSnapshot.data.emailVerified == true) {
                   return OverviewScreen(userSnapshot);
                 }
                 return AuthScreen();
               }),
-
-          // auth.isAuth
-          //     ? OverviewScreen(auth.userId)
-          //     : FutureBuilder(
-          //         future: auth.tryAutoLogin(),
-          //         builder: (ctx, authResultSnapShot) =>
-          //             authResultSnapShot.connectionState ==
-          //                     ConnectionState.waiting
-          //                 ? SplashScreen()
-          //                 : AuthScreen(),
 
           routes: <String, WidgetBuilder>{
             BookListScreen.routeName: (ctx) => BookListScreen(),
@@ -110,10 +99,10 @@ class BookClub extends StatelessWidget {
             AddClubScreen.routeName: (ctx) => AddClubScreen(),
             AddMemberScreen.routeName: (ctx) => AddMemberScreen(),
             ClubScreen.routeName: (ctx) => ClubScreen(),
-            ClubOverviewScreen.routeName: (ctx) =>
-                ClubOverviewScreen(auth.userId),
+            // ClubOverviewScreen.routeName: (ctx) => ClubOverviewScreen(userSnapshot),
             UserDetailsScreen.routeName: (ctx) => UserDetailsScreen(),
             ChatScreen.routeName: (ctx) => ChatScreen(),
+            FindClubScreen.routeName: (ctx) => FindClubScreen(),
           },
         ),
       ),
