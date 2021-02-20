@@ -1,0 +1,35 @@
+<svg version="1.1" viewBox="0 0 50.171 51.135" xmlns="http://www.w3.org/2000/svg">
+ <g transform="translate(57.565 -.67136)">
+  <g transform="translate(0 .093869)">
+   <g transform="translate(-18.796 -34.752)">
+    <rect x="-1.1662" y="54.842" width="12.568" height="30.575" fill="#6d256d" fill-rule="evenodd"/>
+    <rect x="-1.1662" y="54.842" width="3.8475" height="30.495" fill="#5c125b"/>
+    <rect transform="rotate(-90)" x="-58.16" y=".68217" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+   </g>
+   <rect transform="rotate(-90 -26.774 -7.9781)" x="-83.574" y=".68217" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+  </g>
+ </g>
+ <g transform="translate(38.769 -35.424)">
+  <rect x="-13.734" y="40.944" width="12.568" height="44.473" fill="#a88939" fill-rule="evenodd"/>
+  <rect x="-13.734" y="40.944" width="4.0345" height="44.381" fill="#a8772a"/>
+  <rect transform="rotate(-90)" x="-44.354" y="-11.547" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+  <rect transform="rotate(-90)" x="-83.562" y="-11.547" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+  <g transform="translate(-.16071 .020408)">
+   <rect x="-38.608" y="35.403" width="12.568" height="50.014" fill="#28764e" fill-rule="evenodd"/>
+   <rect x="-38.608" y="35.403" width="3.4733" height="49.911" fill="#28674e"/>
+   <rect transform="rotate(-90)" x="-39.012" y="-36.775" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+   <rect transform="rotate(-90)" x="-83.56" y="-36.756" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+  </g>
+ </g>
+ <g transform="translate(57.565 -.67136)">
+  <g transform="translate(-18.786 -34.732)">
+   <rect x="-26.212" y="45.902" width="12.568" height="39.515" fill="#a85439" fill-rule="evenodd"/>
+   <rect x="-26.212" y="45.902" width="3.6604" height="39.408" fill="#8b5439"/>
+   <rect transform="rotate(-90)" x="-49.344" y="-24.426" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+   <rect transform="rotate(-90)" x="-83.556" y="-24.426" width="1.2238" height="8.9277" fill="#ccecc9" fill-opacity=".49799"/>
+  </g>
+ </g>
+ <g transform="translate(38.769 -35.424)">
+  <rect transform="rotate(-90)" x="-86.558" y="-38.769" width="1.2238" height="50.171" fill="#284b26"/>
+ </g>
+</svg>
